@@ -1,4 +1,6 @@
 class Task < ApplicationRecord
+  belongs_to :list
+  
   def toggle_complete!
      update(complete: !complete)
    end
@@ -8,7 +10,7 @@ class Task < ApplicationRecord
    end
 
    def overdue?
-     return Time.now > deadline
+     return Time.now > deadline && !complete
    end
 
    def increment_priority!

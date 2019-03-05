@@ -23,11 +23,22 @@ RSpec.describe Task, type: :model do
     end
   end
 
-    # it 'should return the current time if greater than the deadline' do
-    #   task = Task.create(overdue: )
-    #   take.overdue?
-    #   expect(task.overdue).to eq()
-    # end
+   describe '#overdue?' do 
+     it 'should return true if deadline of the task is earlier than now and complete is false' do 
+       task = Task.create(deadline: 1.hour.ago, complete: false)
+       expect(task.overdue?).to eq(true)
+     end
+
+     it 'should return false if deadline of the task is earlier than now and complete is true' do 
+       task = Task.create(deadline: 1.hour.ago, complete: true)
+       expect(task.overdue?).to eq(false)
+     end
+
+     it 'should return false if deadline of the task is later than now and complete is false' do 
+       task = Task.create(deadline: 1.hour.from_now, complete: false)
+       expect(task.overdue?).to eq(false)
+     end
+   end
 
   describe 'increment_priority!' do
     it 'should update the priority if priority is less than 10' do
@@ -46,10 +57,11 @@ RSpec.describe Task, type: :model do
   end
 
   describe 'snooze_hour!' do
-    it 'should update the deadline by one hour' do
-      task = Task.create(deadline: )
+    it 'should delay the deadline by one hour' do
+      time_stamp = Time.now
+      task = Task.create(deadline: time_stamp)
       task.snooze_hour!
-      expect(task.deadline).to eq()
+      expect(task.deadline).to eq(time_stamp + 1.hour)
     end
   end
 
